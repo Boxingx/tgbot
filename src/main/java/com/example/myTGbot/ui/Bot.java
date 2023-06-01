@@ -2,6 +2,7 @@ package com.example.myTGbot.ui;
 
 import com.example.myTGbot.config.PropertyProvider;
 import com.example.myTGbot.controller.BuyerController;
+import com.example.myTGbot.controller.ItemController;
 import lombok.EqualsAndHashCode;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -31,9 +32,13 @@ public class Bot extends TelegramLongPollingBot {
     @Autowired
     private BuyerController buyerController;
 
-    public Bot (PropertyProvider propertyProvider, BuyerController buyerController) {
+    @Autowired
+    private ItemController itemController;
+
+    public Bot (PropertyProvider propertyProvider, BuyerController buyerController, ItemController itemController) {
         this.propertyProvider = propertyProvider;
         this.buyerController = buyerController;
+        this.itemController = itemController;
     }
 
     @Override
@@ -45,6 +50,7 @@ public class Bot extends TelegramLongPollingBot {
             String firstName = update.getMessage().getChat().getFirstName();
 
 
+
             switch (text) {
                 case "/start" :
                     sendMessage(chatId, "Привет " + firstName + " " + new Date(System.currentTimeMillis()));
@@ -54,6 +60,11 @@ public class Bot extends TelegramLongPollingBot {
                             update.getMessage().getChat().getLastName(),
                             new ArrayList<>(),
                             null);
+                    break;
+                case "/get" :
+                    itemController.get(1l);
+                    break;
+
             }
         }
     }
